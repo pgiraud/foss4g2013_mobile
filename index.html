@@ -96,13 +96,15 @@
                 <section>
                 <h2>Mobile app required features</h2>
                 <ul>
-                    <li>Navigable and queriable map</li>
-                    <li>Base layers</li>
-                    <li>Many overlay layers</li>
-                    <li>Location search</li>
-                    <li>Sharing</li>
-                    <li>Offline support</li>
-                    <li>Languages support</li>
+                    <li class="fragment">Navigable and queriable map</li>
+                    <li class="fragment">Base layers</li>
+                    <li class="fragment">Overlay layers (a lot)</li>
+                    <li class="fragment">Location search</li>
+                    <li class="fragment">Offline support</li>
+                    <li class="fragment">Languages support</li>
+                    <li class="fragment">Support for Android and iOS</li>
+                    <li class="fragment">(Sharing)</li>
+                    <li class="fragment">(Access to camera)</li>
                 </ul>
                 </section>
                 <section>
@@ -120,10 +122,10 @@
                 </section>
                 <section>
                 <h3>Local storage</h3>
-                Usually limited to 5MB.
-                ~400 layer tiles
+                <p class="fragment">Usually limited to 5MB.</p>
+                <p class="fragment">~400 layer tiles</p>
                 <br />
-                -> Doesn't suit the needs.
+                <p class="fragment">-> Doesn't suit the needs.</p>
                 </section>
                 <section>
                 <h2>Cordova (PhoneGap)<br/> to the rescue</h2>
@@ -145,20 +147,61 @@
                 </ul>
                 <br/>
                 <br/>
-                Result: <strong>File > Database</strong>
+                <p class="fragment">
+                    Result: <strong>File > Database</strong>
+                </p>
                 </section>
                 <section>
-                    Database needs a plugin<br />
+                    Database: plugin required<br />
                     <small>(Note: not valid anymore, to be reconsidered)</small>
                 </section>
                 <section>
                 <h2><span style="text-decoration:line-through">Database</span> or File?</h2>
                 </section>
                 <section>
+                1. get the directory path
+                <pre><code>window.requestFileSystem(LocalFileSystem.PERSISTENT, 0,
+    function(fs) {
+        fs.root.getDirectory(
+            "newDir",
+            {create: true, exclusive: false},
+            function(dirEntry) {
+                // do something with dirEntry.fullPath
+            },
+            onDirError
+    },
+    onFsError
+);</code></pre>
+                </section>
+                <section>
+                2. Download tile image using FileTransfer
+                <pre><code>var fileTransfer = new FileTransfer();
+fileTransfer.download(
+    url,
+    path + '/' + fileName,
+    function(file) {
+        // file successfully downloaded
+        // update percent done counter
+    },
+    onError
+);</code></pre>
+                </section>
+                <section>
+                <h3>
+                    What do filenames look like?
+                </h3>
+                <img src="examples/assets/files.png" alt="" style="" />
+                </section>
+                <section>
+                <h3>Loading bar</h3>
+                <img src="examples/assets/download.png" alt="" style="" />
+                </section>
+                <section>
                 <h2>Integration with</h2>
                 <h1>OpenLayers</h1>
                 </section>
                 <section>
+                New Layer Class
                 <pre><code class="data-trim contenteditable">var SavedMapLayer = OpenLayers.Class(OpenLayers.Layer.XYZ, {
     async: true, // because Cordova File API is asynchronous
     fs: null, // the FileSystem
@@ -180,26 +223,59 @@
 });</code></pre>
                 </section>
                 <section>
+                Usage
                 <pre><code class="data-trim contenteditable">window.requestFileSystem(LocalFileSystem.PERSISTENT, 0,
-    function(fs) {
-        var layer = new SavedMapLayer(
-            'savedmap',
-            {
-                isBaseLayer: true,
-                fs: fs,
-                uuid: uuid,
-                [...]
-            }
-        );
-        map.addLayer(layer);
-    },
-    onError
+var layer = new SavedMapLayer(
+    'savedmap',
+    {
+        isBaseLayer: true,
+        fs: fs,
+        uuid: uuid,
+        [...]
+    }
 );</code></pre>
                 </section>
+                <section>
+                <h3>Performance considerations</h3>
+                Layers are merged <strong>on-the-fly</strong> using <strong>MapProxy</strong>
+                <br />
+                to lower the network load as much as possible.
+                </section>
+                <section>
+                    <h1>Conclusion</h1>
+                </section>
+                <section>
+                    <h3>Developing w/ OpenLayers, SenchaTouch, PhoneGap</h3>
+                    <h2>Pros</h2>
+                    <ul>
+                        <li>Nice looking app</li>
+                        <li>ST: UI dev can be fast</li>
+                        <li>OL: extensible</li>
+                    </ul>
+                </section>
+                <section>
+                    <h3>Developing w/ OpenLayers, SenchaTouch, PhoneGap</h3>
+                    <h2>Cons</h2>
+                    <ul>
+                        <li>ST: intrusive event management,</li>
+                        <li>ST: transition performance issues,</li>
+                        <li>ST: browsers support limited,</li>
+                        <li>Building apps w/ PG isn't straight forward.</li>
+                        <li>Debugging is painful</li>
+                    </ul>
+                </section>
+                <section>
+                <h3>General considerations</h3>
+                <ul>
+                    <li>Many plateforms and devices to test (OS, version, size)</li>
+                    <li>Android simulator is slow</li>
+                    <li>iOS dev requires a mac and apple user account</li>
+                </ul>
+                </section>
+                <section>
+                    <h1>Demo</h1>
+                </section>
             </div>
-
-
-
         </div>
 
         <script src="lib/js/head.min.js"></script>
