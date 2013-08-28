@@ -33,6 +33,9 @@
             .reveal pre code {
                 max-height: 500px;
             }
+            .reveal td {
+                vertical-align: middle;
+            }
         </style>
     </head>
 
@@ -108,6 +111,7 @@
                     <li class="fragment">Offline support</li>
                     <li class="fragment">I18n (languages)</li>
                     <li class="fragment">Android and iOS</li>
+                    <li class="fragment">Web + Native</li>
                     <li class="fragment">(Access to camera)</li>
                 </ul>
                 </section>
@@ -152,8 +156,10 @@
                     <li>Device (simulator or real device, OS, ...)</li>
                     <li>Service response latency</li>
                 </ul>
-                <br/>
-                <br/>
+                </section>
+                <section>
+                <h2>Benchmarks</h2>
+                <img src="examples/assets/benchmark.png" alt="" />
                 <p class="fragment">
                     Result: <strong>File > Database</strong>
                 </p>
@@ -197,7 +203,42 @@ fileTransfer.download(
                 <h3>
                     What do filenames look like?
                 </h3>
+                $uuid_$z_$x_$y.png
+                <br/>
                 <img src="examples/assets/files.png" alt="" style="" />
+                </section>
+                <section>
+                <h3>Performance considerations</h3>
+                Layers are merged <strong>on-the-fly</strong> using <strong>MapProxy</strong>
+                <br />
+                to lower the network load as much as possible.
+                </section>
+                <section>
+                <table>
+                    <tr>
+                        <td>
+                            <img src="examples/assets/baselayer.png" alt="" style="" />
+                        </td>
+                        <td>
+                            +
+                        </td>
+                        <td>
+                            <img src="examples/assets/overlay_1.png" alt="" style="" />
+                        </td>
+                        <td>
+                            +
+                        </td>
+                        <td>
+                            <img src="examples/assets/overlay_2.png" alt="" style="" />
+                        </td>
+                        <td style="vertical-align=top">
+                            =
+                        </td>
+                        <td>
+                            <img src="examples/assets/mapproxy_merge.png" alt="" style="" />
+                        </td>
+                    </tr>
+                </table>
                 </section>
                 <section>
                 <h3>Loading bar</h3>
@@ -212,7 +253,7 @@ fileTransfer.download(
                 <pre><code class="data-trim contenteditable">var SavedMapLayer = OpenLayers.Class(OpenLayers.Layer.XYZ, {
     async: true, // because Cordova File API is asynchronous
     fs: null, // the FileSystem
-    uuid: null,
+    uuid: null, // id of the layer to build filenames
     ...
     getURLasync: function(bounds, callback, scope) {
         ...
@@ -222,9 +263,7 @@ fileTransfer.download(
             function(fileEntry) {
                 callback.call(scope, fileEntry.toURL());
             },
-            function(error) {
-                console.log("error getting file : " + fileName);
-            }
+            onError
         );
     }
 });</code></pre>
@@ -243,21 +282,15 @@ var layer = new SavedMapLayer(
 );</code></pre>
                 </section>
                 <section>
-                <h3>Performance considerations</h3>
-                Layers are merged <strong>on-the-fly</strong> using <strong>MapProxy</strong>
-                <br />
-                to lower the network load as much as possible.
-                </section>
-                <section>
                     <h1>Conclusion</h1>
                 </section>
                 <section>
                     <h3>Developing w/ OpenLayers, SenchaTouch, PhoneGap</h3>
                     <h2>Pros</h2>
                     <ul>
-                        <li>Nice looking app</li>
+                        <li>ST: Nice looking app (buttons, views, theme)</li>
                         <li>ST: UI dev can be fast</li>
-                        <li>OL: extensible</li>
+                        <li>OL: powerful and extensible</li>
                     </ul>
                 </section>
                 <section>
@@ -266,15 +299,15 @@ var layer = new SavedMapLayer(
                     <ul>
                         <li>ST: intrusive event management,</li>
                         <li>ST: transition performance issues,</li>
-                        <li>ST: browsers support limited,</li>
-                        <li>Building apps w/ PG isn't straight forward.</li>
+                        <li>ST: limited browsers support,</li>
+                        <li>PG: Building apps for multiple targets not straight forward.</li>
                         <li>Debugging is painful</li>
                     </ul>
                 </section>
                 <section>
                 <h3>General considerations</h3>
                 <ul>
-                    <li>Many plateforms and devices to test (OS, version, size)</li>
+                    <li>Multiple plateforms and devices (OS, version, size) -> testing time increased</li>
                     <li>Android simulator is slow</li>
                     <li>iOS dev requires a mac and apple user account</li>
                 </ul>
