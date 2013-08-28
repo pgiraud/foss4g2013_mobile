@@ -29,6 +29,11 @@
         <!--[if lt IE 9]>
         <script src="lib/js/html5shiv.js"></script>
         <![endif]-->
+        <style type="text/css">
+            .reveal pre code {
+                max-height: 500px;
+            }
+        </style>
     </head>
 
     <body>
@@ -61,20 +66,136 @@
                 </div>
                 </section>
                 <section>
-                <h2>Project Overview</h2>
+                <h2>Desktop app overview</h2>
+                <div>
+                    <img src="examples/assets/desktop.png" alt="" style="" />
+                </div>
+                </section>
+                <section>
+                <h2>Desktop app overview</h2>
                 <div>
                     Many layers in a catalog <br />
                     <img src="examples/assets/catalog.png" alt="" style="" />
                 </div>
                 </section>
                 <section>
-                <h2>Project Overview</h2>
+                <h2>Desktop app overview</h2>
                 <div>
                     Authentication<br />
                     <img src="examples/assets/login.png" alt="" style="" />
+                    <br />
+                    to allow <strong>users</strong> create their <strong>own maps</strong>.
                 </div>
                 </section>
-
+                <section>
+                <h2>Desktop app overview</h2>
+                <div>
+                    ... and many other features
+                </div>
+                </section>
+                <section>
+                <h2>Mobile app required features</h2>
+                <ul>
+                    <li>Navigable and queriable map</li>
+                    <li>Base layers</li>
+                    <li>Many overlay layers</li>
+                    <li>Location search</li>
+                    <li>Sharing</li>
+                    <li>Offline support</li>
+                    <li>Languages support</li>
+                </ul>
+                </section>
+                <section>
+                <h2>Mockups</h2>
+                <img src="examples/assets/mockups.png" alt="" />
+                </section>
+                <section>
+                <h2>Mockups</h2>
+                <img src="examples/assets/mobile.png" alt="" />
+                <img src="examples/assets/mobile_layers_overlays_1.png" alt="" />
+                <img src="examples/assets/mobile_layers_offline_dl.png" alt="" />
+                </section>
+                <section>
+                <h1>Offline support</h1>
+                </section>
+                <section>
+                <h3>Local storage</h3>
+                Usually limited to 5MB.
+                ~400 layer tiles
+                <br />
+                -> Doesn't suit the needs.
+                </section>
+                <section>
+                <h2>Cordova (PhoneGap)<br/> to the rescue</h2>
+                Native application with support for read, write and navigate file system hierarchies.
+                </section>
+                <section>
+                <h2>Database or File?</h2>
+                </section>
+                <section>
+                <h2>Benchmarks</h2>
+                <a href="https://github.com/pgiraud/OfflineTiles">@pgiraud/OfflineTiles</a>
+                <br />
+                Difficult to have good benchmarks. <br />
+                <br />
+                <ul>Many inputs to check:
+                    <li>Size of image</li>
+                    <li>Device (simulator or real device, OS, ...)</li>
+                    <li>Service response latency</li>
+                </ul>
+                <br/>
+                <br/>
+                Result: <strong>File > Database</strong>
+                </section>
+                <section>
+                    Database needs a plugin<br />
+                    <small>(Note: not valid anymore, to be reconsidered)</small>
+                </section>
+                <section>
+                <h2><span style="text-decoration:line-through">Database</span> or File?</h2>
+                </section>
+                <section>
+                <h2>Integration with</h2>
+                <h1>OpenLayers</h1>
+                </section>
+                <section>
+                <pre><code class="data-trim contenteditable">var SavedMapLayer = OpenLayers.Class(OpenLayers.Layer.XYZ, {
+    async: true, // because Cordova File API is asynchronous
+    fs: null, // the FileSystem
+    uuid: null,
+    ...
+    getURLasync: function(bounds, callback, scope) {
+        ...
+        this.fs.root.getFile(
+            path + '/' + fileName,
+            null,
+            function(fileEntry) {
+                callback.call(scope, fileEntry.toURL());
+            },
+            function(error) {
+                console.log("error getting file : " + fileName);
+            }
+        );
+    }
+});</code></pre>
+                </section>
+                <section>
+                <pre><code class="data-trim contenteditable">window.requestFileSystem(LocalFileSystem.PERSISTENT, 0,
+    function(fs) {
+        var layer = new SavedMapLayer(
+            'savedmap',
+            {
+                isBaseLayer: true,
+                fs: fs,
+                uuid: uuid,
+                [...]
+            }
+        );
+        map.addLayer(layer);
+    },
+    onError
+);</code></pre>
+                </section>
             </div>
 
 
