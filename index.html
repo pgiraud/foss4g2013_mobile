@@ -69,6 +69,7 @@
                     </p>
                 </section>
                 <section>
+                    <img src="examples/assets/logo_gouvernement_luxembourg_cadastre.gif" alt="" />
                     <a href="http://maps.geoportail.lu/mobile">http://maps.geoportail.lu/mobile</a>
                     <br />
                     <img src="examples/assets/qrcode.png" alt="" />
@@ -161,7 +162,7 @@
                 <h2>Benchmarks</h2>
                 <img src="examples/assets/benchmark.png" alt="" />
                 <p class="fragment">
-                    Result: <strong>File > Database</strong>
+                    Result: <strong>File</strong> better than <strong>Database</strong>
                 </p>
                 </section>
                 <section>
@@ -172,7 +173,7 @@
                 <h2><span style="text-decoration:line-through">Database</span> or File?</h2>
                 </section>
                 <section>
-                1. get the directory path
+                1. Get the directory path
                 <pre><code>window.requestFileSystem(LocalFileSystem.PERSISTENT, 0,
     function(fs) {
         fs.root.getDirectory(
@@ -270,16 +271,20 @@ fileTransfer.download(
                 </section>
                 <section>
                 Usage
-                <pre><code class="data-trim contenteditable">window.requestFileSystem(LocalFileSystem.PERSISTENT, 0,
-var layer = new SavedMapLayer(
-    'savedmap',
-    {
-        isBaseLayer: true,
-        fs: fs,
-        uuid: uuid,
-        [...]
-    }
-);</code></pre>
+                <pre><code class="data-trim contenteditable">window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fs) {
+    [...]
+    var layer = new SavedMapLayer(
+        'savedmap',
+        {
+            isBaseLayer: true,
+            fs: fs,
+            uuid: uuid,
+            [...]
+        }
+    );
+    [...]
+});
+</code></pre>
                 </section>
                 <section>
                     <h1>Conclusion</h1>
@@ -288,8 +293,9 @@ var layer = new SavedMapLayer(
                     <h3>Developing w/ OpenLayers, SenchaTouch, PhoneGap</h3>
                     <h2>Pros</h2>
                     <ul>
-                        <li>ST: Nice looking app (buttons, views, theme)</li>
+                        <li>ST: nice looking app (buttons, views, theme)</li>
                         <li>ST: UI dev can be fast</li>
+                        <li>ST: strong MVC architecture</li>
                         <li>OL: powerful and extensible</li>
                     </ul>
                 </section>
@@ -297,10 +303,10 @@ var layer = new SavedMapLayer(
                     <h3>Developing w/ OpenLayers, SenchaTouch, PhoneGap</h3>
                     <h2>Cons</h2>
                     <ul>
-                        <li>ST: intrusive event management,</li>
-                        <li>ST: transition performance issues,</li>
-                        <li>ST: limited browsers support,</li>
-                        <li>PG: Building apps for multiple targets not straight forward.</li>
+                        <li>ST: intrusive event management</li>
+                        <li>ST: transition performance issues</li>
+                        <li>ST: limited browsers support</li>
+                        <li>PG: building apps for multiple targets not straight forward</li>
                         <li>Debugging is painful</li>
                     </ul>
                 </section>
@@ -309,7 +315,7 @@ var layer = new SavedMapLayer(
                 <ul>
                     <li>Multiple plateforms and devices (OS, version, size) -> testing time increased</li>
                     <li>Android simulator is slow</li>
-                    <li>iOS dev requires a mac and apple user account</li>
+                    <li>iOS dev requires a mac and an apple user account</li>
                 </ul>
                 </section>
                 <section>
